@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Garden Economy · Cheru</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rose:    #DC3D7D;
+      --pink:    #f9a8d4;
+      --soft-green: #C5DEB8;
+      --sky:     #65EDF5;
+      --indigo:  #5865F2;
+      --gold:    #E6B566;
+      --purple:  #9D4EDD;
+      --dark:    #0a120a;
+      --card-bg: rgba(10, 22, 10, 0.72);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      color: #e8f5e2;
+      background: var(--dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND ── */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      background: url('green.png') center center / cover no-repeat;
+      filter: brightness(0.28) saturate(1.2);
+      z-index: 0;
+    }
+    .bg-vignette {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(5,12,5,0.85) 100%);
+      z-index: 1;
+    }
+    .petals {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      overflow: hidden;
+    }
+    .petal {
+      position: absolute;
+      width: 8px; height: 8px;
+      border-radius: 50% 0 50% 0;
+      opacity: 0;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(-40px) rotate(0deg);   opacity: 0; }
+      10%  { opacity: 0.4; }
+      90%  { opacity: 0.15; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ── LAYOUT ── */
+    .page { position: relative; z-index: 3; }
+
+    /* ── NAV BAR ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(10, 18, 10, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(197,222,184,0.15);
+    }
+    nav .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    nav .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.1rem;
+      transition: opacity 0.2s;
+    }
+    nav .nav-logo:hover { opacity: 0.8; }
+    nav .nav-logo img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--rose);
+      box-shadow: 0 0 12px rgba(220,61,125,0.4);
+    }
+    nav .nav-links {
+      display: flex;
+      gap: 28px;
+    }
+    nav a.nav-link {
+      color: var(--soft-green);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+      letter-spacing: 0.02em;
+    }
+    nav a.nav-link:hover { color: var(--rose); }
+    nav a.nav-link.active { color: var(--rose); font-weight: 500; }
+
+    /* ── HERO ── */
+    header {
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 20px 60px;
+    }
+
+    .currency-showcase {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 40px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .currency-icon {
+      width: 90px;
+      height: 90px;
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(255,255,255,0.4));
+    }
+    .currency-icon:nth-child(2) { animation-delay: -1.3s; }
+    .currency-icon:nth-child(3) { animation-delay: -2.6s; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-15px); }
+    }
+
+    h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 40px rgba(220,61,125,0.6), 0 2px 8px rgba(0,0,0,0.8);
+      letter-spacing: 0.04em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    h1 span { 
+      background: linear-gradient(135deg, var(--rose), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .tagline {
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--soft-green);
+      opacity: 0.85;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ── CURRENCY CARDS ── */
+    .section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 70px 24px;
+    }
+
+    .currency-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-bottom: 60px;
+    }
+
+    .currency-card {
+      background: var(--card-bg);
+      border: 2px solid rgba(197,222,184,0.15);
+      border-radius: 20px;
+      padding: 32px 28px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .currency-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--card-accent);
+      border-radius: 20px 20px 0 0;
+    }
+    .currency-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--card-accent);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px var(--card-glow);
+    }
+
+    .currency-card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .currency-card-icon {
+      width: 64px;
+      height: 64px;
+      filter: drop-shadow(0 0 12px var(--card-glow));
+    }
+    .currency-card h2 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.5rem;
+      color: #fff;
+    }
+    .currency-tier {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--card-accent);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    .currency-card p {
+      line-height: 1.75;
+      color: rgba(232,245,226,0.75);
+      margin-bottom: 20px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .stat-box {
+      background: rgba(0,0,0,0.3);
+      padding: 12px 14px;
+      border-radius: 10px;
+      border-left: 3px solid var(--card-accent);
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(232,245,226,0.5);
+      margin-bottom: 4px;
+    }
+    .stat-value {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--card-accent);
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-it-works {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(197,222,184,0.2);
+      border-radius: 16px;
+      padding: 40px 36px;
+      margin: 60px 0;
+    }
+    .how-it-works h3 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.4rem;
+      color: var(--soft-green);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .flow-steps {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+    .flow-step {
+      flex: 1;
+      min-width: 200px;
+      max-width: 280px;
+      text-align: center;
+      padding: 24px 20px;
+      background: rgba(0,0,0,0.35);
+      border-radius: 12px;
+      border: 1px solid rgba(197,222,184,0.1);
+    }
+    .flow-step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--rose);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      font-weight: 700;
+      font-family: 'Cinzel Decorative', serif;
+    }
+    .flow-step h4 {
+      font-size: 0.95rem;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .flow-step p {
+      font-size: 0.85rem;
+      color: rgba(232,245,226,0.65);
+      line-height: 1.5;
+    }
+    .flow-arrow {
+      font-size: 2rem;
+      color: var(--rose);
+      opacity: 0.5;
+    }
+
+    /* ── COMMANDS ── */
+    .cmd-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .cmd-row {
+      display: grid;
+      grid-template-columns: minmax(180px, auto) 1fr;
+      gap: 16px;
+      align-items: baseline;
+      padding: 12px 16px;
+      background: rgba(0,0,0,0.35);
+      border-radius: 10px;
+      border-left: 3px solid var(--sky);
+      transition: all 0.2s;
+    }
+    .cmd-row:hover {
+      border-left-color: var(--rose);
+      background: rgba(0,0,0,0.5);
+    }
+    .cmd-row code {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: var(--sky);
+      white-space: nowrap;
+    }
+    .cmd-row span {
+      font-size: 0.88rem;
+      color: rgba(232,245,226,0.7);
+      line-height: 1.4;
+    }
+
+    .section-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.6rem;
+      color: var(--soft-green);
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 48px 20px 64px;
+      font-size: 0.8rem;
+      color: rgba(197,222,184,0.4);
+      letter-spacing: 0.06em;
+    }
+    footer .rose { color: var(--rose); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 580px) {
+      .cmd-row { grid-template-columns: 1fr; gap: 6px; }
+      nav .nav-links { gap: 16px; }
+      nav .nav-logo span { display: none; }
+      .flow-arrow { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="bg-layer"></div>
+  <div class="bg-vignette"></div>
+  <div class="petals" id="petals"></div>
+
+  <div class="page">
+
+    <!-- Navigation -->
+    <nav>
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">
+          <img src="cherufacepinkmote.png" alt="Cheru" />
+          <span>Cheru</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">Commands</a>
+          <a href="economy.html" class="nav-link active">Economy</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <header>
+      <div class="currency-showcase">
+        <img src="petals.png" alt="Petals" class="currency-icon" />
+        <img src="essence.png" alt="Essence" class="currency-icon" />
+        <img src="radiant4.png" alt="Radiant" class="currency-icon" />
+      </div>
+      <h1>Garden <span>Economy</span></h1>
+      <p class="tagline">
+        A three-currency system where everyday rewards bloom into legendary prestige
+      </p>
+    </header>
+
+    <!-- Currency Cards -->
+    <section class="section">
+      <div class="currency-grid">
+        
+        <!-- Petals -->
+        <div class="currency-card" style="--card-accent: var(--pink); --card-glow: rgba(249,168,212,0.3);">
+          <div class="currency-card-header">
+            <img src="petals.png" alt="Petals" class="currency-card-icon" />
+            <div>
+              <h2>Petals</h2>
+              <div class="currency-tier">Common Currency</div>
+            </div>
+          </div>
+          <p>
+            The lifeblood of the garden. Petals fall freely for those who tend to the community — 
+            claim them daily, complete tasks, or catch them when they drop in chat.
+          </p>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-label">Daily Reward</div>
+              <div class="stat-value">25 🌸</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Drop Range</div>
+              <div class="stat-value">15-50</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">VIP Bonus</div>
+              <div class="stat-value">2x</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Rarity</div>
+              <div class="stat-value">Abundant</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Essence -->
+        <div class="currency-card" style="--card-accent: var(--purple); --card-glow: rgba(157,78,221,0.3);">
+          <div class="currency-card-header">
+            <img src="essence.png" alt="Essence" class="currency-card-icon" />
+            <div>
+              <h2>Essence</h2>
+              <div class="currency-tier">Engagement Currency</div>
+            </div>
+          </div>
+          <p>
+            Crystallized energy from active participation. Harder to come by than petals — 
+            earned through meaningful tasks, special events, and consistent dedication.
+          </p>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-label">Daily Reward</div>
+              <div class="stat-value">5 🔮</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Task Rewards</div>
+              <div class="stat-value">10-25</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">VIP Bonus</div>
+              <div class="stat-value">2x</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Rarity</div>
+              <div class="stat-value">Uncommon</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Radiant -->
+        <div class="currency-card" style="--card-accent: var(--gold); --card-glow: rgba(230,181,102,0.4);">
+          <div class="currency-card-header">
+            <img src="radiant4.png" alt="Radiant" class="currency-card-icon" />
+            <div>
+              <h2>Radiant</h2>
+              <div class="currency-tier">Prestige Currency</div>
+            </div>
+          </div>
+          <p>
+            The pinnacle of the garden's magic. Radiant can only be forged by combining 
+            petals and essence — a symbol of mastery, dedication, and true legendary status.
+          </p>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-label">Forge Cost</div>
+              <div class="stat-value">100 🌸</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">+ Essence</div>
+              <div class="stat-value">50 🔮</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Output</div>
+              <div class="stat-value">1 ✨</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Rarity</div>
+              <div class="stat-value">Legendary</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- How It Works -->
+      <div class="how-it-works">
+        <h3>🌿 How The Economy Works</h3>
+        <p style="text-align:center; color:rgba(232,245,226,0.7); max-width:700px; margin:0 auto 20px;">
+          A simple progression from everyday rewards to legendary prestige
+        </p>
+
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-step-num">1</div>
+            <h4>Earn Petals & Essence</h4>
+            <p>Daily claims, task completion, random drops, and active participation</p>
+          </div>
+          
+          <div class="flow-arrow">→</div>
+          
+          <div class="flow-step">
+            <div class="flow-step-num">2</div>
+            <h4>Build Your Balance</h4>
+            <p>Stack currency through consistent engagement and streaks</p>
+          </div>
+          
+          <div class="flow-arrow">→</div>
+          
+          <div class="flow-step">
+            <div class="flow-step-num">3</div>
+            <h4>Forge Radiant</h4>
+            <p>Combine 100 petals + 50 essence to create 1 radiant</p>
+          </div>
+          
+          <div class="flow-arrow">→</div>
+          
+          <div class="flow-step">
+            <div class="flow-step-num">4</div>
+            <h4>Unlock Prestige</h4>
+            <p>Use radiant for exclusive items and legendary status</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Commands -->
+      <h2 class="section-title">💫 Economy Commands</h2>
+      
+      <div class="cmd-grid">
+        <div class="cmd-row">
+          <code>.gdaily / .gd</code>
+          <span>Claim your daily petals and essence (VIP 2x bonus)</span>
+        </div>
+        <div class="cmd-row">
+          <code>.gbalance / .gbal</code>
+          <span>Check your wallet — all three currencies at a glance</span>
+        </div>
+        <div class="cmd-row">
+          <code>.gforge</code>
+          <span>Forge 1 radiant from 100 petals + 50 essence</span>
+        </div>
+        <div class="cmd-row">
+          <code>.gleaderboard / .glb</code>
+          <span>Top earners leaderboard — tier rankings and totals</span>
+        </div>
+        <div class="cmd-row">
+          <code>.gstats</code>
+          <span>Your detailed economy statistics and history</span>
+        </div>
+        <div class="cmd-row">
+          <code>.gtasks</code>
+          <span>View available tasks and rewards</span>
+        </div>
+        <div class="cmd-row">
+          <code>.gcomplete &lt;task&gt;</code>
+          <span>Complete a task to earn currency</span>
+        </div>
+        <div class="cmd-row">
+          <code>.gshop [category]</code>
+          <span>Browse the garden shop — items, commissions, perks</span>
+        </div>
+        <div class="cmd-row">
+          <code>.gbuy &lt;item_id&gt;</code>
+          <span>Purchase an item from the shop</span>
+        </div>
+        <div class="cmd-row">
+          <code>.ginventory</code>
+          <span>View your purchase history and claimed items</span>
+        </div>
+      </div>
+
+      <!-- Features Callout -->
+      <div class="how-it-works" style="margin-top: 60px;">
+        <h3>✨ Economy Features</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 24px;">
+          <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 2rem; margin-bottom: 10px;">🔥</div>
+            <h4 style="color: var(--rose); margin-bottom: 8px;">Daily Streaks</h4>
+            <p style="font-size: 0.88rem; color: rgba(232,245,226,0.65);">
+              Build momentum — longer streaks unlock bonus rewards
+            </p>
+          </div>
+          <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 2rem; margin-bottom: 10px;">⭐</div>
+            <h4 style="color: var(--gold); margin-bottom: 8px;">Tier System</h4>
+            <p style="font-size: 0.88rem; color: rgba(232,245,226,0.65);">
+              5 tiers from Sprout to Garden Master based on total earned
+            </p>
+          </div>
+          <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 2rem; margin-bottom: 10px;">🎁</div>
+            <h4 style="color: var(--purple); margin-bottom: 8px;">Random Drops</h4>
+            <p style="font-size: 0.88rem; color: rgba(232,245,226,0.65);">
+              Currency appears randomly in chat — first to claim wins
+            </p>
+          </div>
+          <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 2rem; margin-bottom: 10px;">🛒</div>
+            <h4 style="color: var(--sky); margin-bottom: 8px;">Garden Shop</h4>
+            <p style="font-size: 0.88rem; color: rgba(232,245,226,0.65);">
+              Spend currency on commissions, perks, and exclusive items
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>
+        <a href="index.html" style="color: var(--rose); text-decoration: none;">← Back to Commands</a>
+        &nbsp;·&nbsp;
+        Made with <span class="rose">♥</span> for the secret garden
+      </p>
+    </footer>
+
+  </div>
+
+  <script>
+    // Generate floating petals
+    const colors = ['#DC3D7D','#f9a8d4','#C5DEB8','#9D4EDD','#E6B566'];
+    const container = document.getElementById('petals');
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement('div');
+      p.className = 'petal';
+      p.style.cssText = `
+        left: ${Math.random()*100}%;
+        background: ${colors[Math.floor(Math.random()*colors.length)]};
+        width: ${5 + Math.random()*7}px;
+        height: ${5 + Math.random()*7}px;
+        animation-duration: ${8 + Math.random()*14}s;
+        animation-delay: ${-Math.random()*20}s;
+      `;
+      container.appendChild(p);
+    }
+  </script>
+</body>
+</html>
