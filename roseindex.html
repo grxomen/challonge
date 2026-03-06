@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cheru · The Garden Spirit Bot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rose:    #DC3D7D;
+      --pink:    #f9a8d4;
+      --soft-green: #C5DEB8;
+      --sky:     #65EDF5;
+      --indigo:  #5865F2;
+      --gold:    #E6B566;
+      --dark:    #0a120a;
+      --card-bg: rgba(10, 22, 10, 0.72);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      color: #e8f5e2;
+      background: var(--dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND ── */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      background: url('green.png') center center / cover no-repeat;
+      filter: brightness(0.28) saturate(1.2);
+      z-index: 0;
+    }
+    .bg-vignette {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(5,12,5,0.85) 100%);
+      z-index: 1;
+    }
+    /* subtle floating petals */
+    .petals {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      overflow: hidden;
+    }
+    .petal {
+      position: absolute;
+      width: 8px; height: 8px;
+      border-radius: 50% 0 50% 0;
+      opacity: 0;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(-40px) rotate(0deg);   opacity: 0; }
+      10%  { opacity: 0.4; }
+      90%  { opacity: 0.15; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ── LAYOUT ── */
+    .page { position: relative; z-index: 3; }
+
+    /* ── HERO ── */
+    header {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 20px 40px;
+      position: relative;
+    }
+
+    .cheru-marker {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--rose);
+      box-shadow: 0 0 30px rgba(220,61,125,0.55), 0 0 60px rgba(220,61,125,0.2);
+      animation: float 4s ease-in-out infinite;
+      margin-bottom: 28px;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-12px); }
+    }
+
+    h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 40px rgba(220,61,125,0.6), 0 2px 8px rgba(0,0,0,0.8);
+      letter-spacing: 0.04em;
+      line-height: 1.15;
+    }
+    h1 span { color: var(--rose); }
+
+    .tagline {
+      margin-top: 16px;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--soft-green);
+      opacity: 0.9;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.7);
+    }
+
+    .hero-divider {
+      margin: 36px auto 0;
+      width: 120px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--rose), transparent);
+    }
+
+    /* ── NAV DOTS ── */
+    .scroll-hint {
+      margin-top: 40px;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--soft-green);
+      opacity: 0.6;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:.9} }
+
+    /* ── SECTIONS ── */
+    .section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 70px 24px;
+    }
+
+    .section-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1.2rem, 3vw, 1.7rem);
+      color: var(--soft-green);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(197,222,184,0.4), transparent);
+    }
+
+    /* ── CARDS ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid rgba(197,222,184,0.15);
+      border-radius: 14px;
+      padding: 24px 22px;
+      backdrop-filter: blur(10px);
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--soft-green));
+      border-radius: 14px 14px 0 0;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(197,222,184,0.35);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    }
+
+    .card-icon { font-size: 1.6rem; margin-bottom: 10px; }
+    .card h3 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.9rem;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .card p {
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: rgba(232,245,226,0.75);
+    }
+
+    /* ── COMMAND TABLE ── */
+    .cmd-group { margin-bottom: 36px; }
+    .cmd-group-title {
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    .cmd-list { display: flex; flex-direction: column; gap: 6px; }
+    .cmd-row {
+      display: grid;
+      grid-template-columns: minmax(200px, auto) 1fr;
+      gap: 16px;
+      align-items: baseline;
+      padding: 10px 14px;
+      background: rgba(0,0,0,0.35);
+      border-radius: 8px;
+      border-left: 3px solid transparent;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .cmd-row:hover { border-left-color: var(--row-color, var(--rose)); background: rgba(0,0,0,0.5); }
+    .cmd-row code {
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: var(--sky);
+      white-space: nowrap;
+    }
+    .cmd-row span {
+      font-size: 0.84rem;
+      color: rgba(232,245,226,0.7);
+      line-height: 1.4;
+    }
+
+    /* ── BADGE PILLS ── */
+    .badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 99px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-family: 'Courier New', monospace;
+    }
+    .badge-admin { background: rgba(88,101,242,0.25); color: var(--indigo); border: 1px solid rgba(88,101,242,0.5); }
+    .badge-owner { background: rgba(230,181,102,0.2); color: var(--gold);   border: 1px solid rgba(230,181,102,0.45); }
+
+    /* ── MARKER ACCENT ── */
+    .marker-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 50px 0 20px;
+    }
+    .marker-sm {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--rose);
+      box-shadow: 0 0 14px rgba(220,61,125,0.4);
+      flex-shrink: 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 48px 20px 64px;
+      font-size: 0.8rem;
+      color: rgba(197,222,184,0.4);
+      letter-spacing: 0.06em;
+      position: relative;
+      z-index: 3;
+    }
+    footer .rose { color: var(--rose); }
+
+    /* ── SEPARATOR ── */
+    .separator {
+      width: 60px; height: 2px;
+      margin: 0 auto 60px;
+      background: linear-gradient(90deg, transparent, rgba(197,222,184,0.3), transparent);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 580px) {
+      .cmd-row { grid-template-columns: 1fr; gap: 4px; }
+      .cmd-row span { padding-left: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background layers -->
+  <div class="bg-layer"></div>
+  <div class="bg-vignette"></div>
+  <div class="petals" id="petals"></div>
+
+  <div class="page">
+
+    <!-- HERO -->
+    <header>
+      <img src="cherufacepinkmote.png" alt="Cheru" class="cheru-marker" />
+      <h1>Cheru<br/><span>The Garden Spirit</span></h1>
+      <p class="tagline">A Discord bot tending to your server's secret garden</p>
+      <div class="hero-divider"></div>
+      <p class="scroll-hint">↓ explore the garden ↓</p>
+    </header>
+
+    <!-- WHAT IS CHERU -->
+    <section class="section">
+      <h2 class="section-title">🌱 What is Cheru?</h2>
+      <p style="font-size:1rem; line-height:1.9; color:rgba(232,245,226,0.8); max-width:680px;">
+        Cheru is a custom Discord bot built for a tight-knit Minecraft & gaming community. She manages
+        tournaments, tracks bloom words, runs loot drops, monitors server uptime, and keeps the garden alive.
+        Every command is designed to feel like tending to something that grows.
+      </p>
+
+      <div class="card-grid" style="margin-top:36px;">
+        <div class="card" style="--card-accent: var(--soft-green);">
+          <div class="card-icon">🌸</div>
+          <h3>Bloom Words</h3>
+          <p>Passive phrase tracking — say the right words and your garden grows. Collect, gift, and climb the leaderboard.</p>
+        </div>
+        <div class="card" style="--card-accent: var(--rose);">
+          <div class="card-icon">🏆</div>
+          <h3>Tournaments</h3>
+          <p>Full Challonge integration. Create brackets, register players, report results, and track ELO across events.</p>
+        </div>
+        <div class="card" style="--card-accent: var(--sky);">
+          <div class="card-icon">🎮</div>
+          <h3>Minecraft Server</h3>
+          <p>Exaroton API integration — check uptime, session length, credit burn rate, and restart the server remotely.</p>
+        </div>
+        <div class="card" style="--card-accent: var(--gold);">
+          <div class="card-icon">🎁</div>
+          <h3>Daily Rewards & Loot</h3>
+          <p>Daily coin rewards with streaks, random loot drops in chat, and playtime-based Minecraft reward claims.</p>
+        </div>
+        <div class="card" style="--card-accent: var(--indigo);">
+          <div class="card-icon">📍</div>
+          <h3>PinPoint</h3>
+          <p>Save and search Minecraft coordinates. Export your whole pin collection as CSV anytime.</p>
+        </div>
+        <div class="card" style="--card-accent: var(--pink);">
+          <div class="card-icon">⭐</div>
+          <h3>Starboard & Stats</h3>
+          <p>Automatic starboard, server growth tracking, activity stats, and detailed per-user star counts.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="separator"></div>
+
+    <!-- BLOOM COMMANDS -->
+    <section class="section" style="padding-top:0;">
+      <div class="marker-row">
+        <img src="cherufacepinkmote.png" alt="" class="marker-sm" />
+        <h2 class="section-title" style="margin-bottom:0; flex:1;">🌸 Bloom Words</h2>
+      </div>
+      <div class="cmd-group">
+        <p class="cmd-group-title">Player Commands</p>
+        <div class="cmd-list">
+          <div class="cmd-row" style="--row-color: var(--rose);">
+            <code>.bloom &lt;word&gt;</code>
+            <span>Claim a bloom word for yourself</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--rose);">
+            <code>.bloomgarden [@user]</code>
+            <span>View someone's bloom collection (or your own)</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--rose);">
+            <code>.bloomsearch &lt;word&gt;</code>
+            <span>Search for a specific bloom phrase</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--rose);">
+            <code>.bloomleader</code>
+            <span>Top gardeners leaderboard — overall, by phrase, or by tier</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--rose);">
+            <code>.bloomstats</code>
+            <span>Your personal bloom statistics</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--rose);">
+            <code>.bloomgift &lt;word&gt; &lt;@user&gt;</code>
+            <span>Gift one of your blooms to another member</span>
+          </div>
+        </div>
+      </div>
+      <div class="cmd-group">
+        <p class="cmd-group-title">Admin Commands <span class="badge badge-admin">admin</span></p>
+        <div class="cmd-list">
+          <div class="cmd-row" style="--row-color: var(--indigo);">
+            <code>.bloompurge &lt;word&gt;</code>
+            <span>Remove a bloom phrase entirely</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--indigo);">
+            <code>.bloomforceadd &lt;word&gt; &lt;tier&gt; &lt;@user&gt;</code>
+            <span>Forcefully give a bloom to a user</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--indigo);">
+            <code>.bloomcount</code>
+            <span>Total bloom phrase statistics (10 min cooldown)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="separator"></div>
+
+    <!-- TOURNAMENT COMMANDS -->
+    <section class="section" style="padding-top:0;">
+      <h2 class="section-title">🏆 Tournaments</h2>
+      <div class="cmd-group">
+        <p class="cmd-group-title">Player Commands</p>
+        <div class="cmd-list">
+          <div class="cmd-row" style="--row-color: var(--indigo);">
+            <code>.register &lt;slug&gt;</code>
+            <span>Join a tournament — auto-matches your Discord name or creates a new participant</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--indigo);">
+            <code>.report &lt;slug&gt; &lt;match_id&gt; &lt;score&gt;</code>
+            <span>Submit your match result (e.g. 3-1). Queued for admin approval.</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--indigo);">
+            <code>.elo [@user]</code>
+            <span>Check your or someone else's ELO rating</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--indigo);">
+            <code>.standings</code>
+            <span>Global ELO leaderboard — top 20 players</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--indigo);">
+            <code>.match_history &lt;slug&gt; [@user]</code>
+            <span>Last 10 match results for you or another player</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--indigo);">
+            <code>.match_list &lt;slug&gt;</code>
+            <span>Current open matches with player mentions</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--indigo);">
+            <code>.tinfo &lt;slug&gt;</code>
+            <span>Tournament overview — type, state, participants, bracket link</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--indigo);">
+            <code>.bracket &lt;slug&gt;</code>
+            <span>Direct Challonge bracket link</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--indigo);">
+            <code>.status &lt;slug&gt;</code>
+            <span>Tournament progress — match completion percentage</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--indigo);">
+            <code>.slugs</code>
+            <span>List all currently tracked tournaments</span>
+          </div>
+        </div>
+      </div>
+      <div class="cmd-group">
+        <p class="cmd-group-title">Organizer / Admin Commands <span class="badge badge-admin">admin</span></p>
+        <div class="cmd-list">
+          <div class="cmd-row" style="--row-color: var(--gold);">
+            <code>.ct &lt;slug&gt; &lt;type&gt; &lt;name&gt; [@role]</code>
+            <span>Create a tournament. Types: single, double, round. Optional role preloads participants.</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--gold);">
+            <code>.seed &lt;slug&gt;</code>
+            <span>Start tournament / process check-ins</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--gold);">
+            <code>.areport &lt;slug&gt; &lt;match_id&gt; @winner &lt;score&gt;</code>
+            <span>Force-submit any match result as admin</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--gold);">
+            <code>.confirm_report &lt;slug&gt; &lt;match_id&gt;</code>
+            <span>Approve a pending report — pushes to Challonge and updates ELO</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--gold);">
+            <code>.deny_report &lt;slug&gt; &lt;match_id&gt;</code>
+            <span>Reject a pending report and notify the submitter</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--gold);">
+            <code>.admin_add &lt;slug&gt; @user</code>
+            <span>Add and auto-bind a user to the tournament</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--gold);">
+            <code>.admin_bind &lt;slug&gt; @user &lt;pid&gt;</code>
+            <span>Manually bind a user to a specific Challonge participant ID</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--gold);">
+            <code>.set_elo @user &lt;score&gt;</code>
+            <span>Override someone's ELO rating</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--gold);">
+            <code>.drop &lt;slug&gt; @user</code>
+            <span>Remove a player from a tournament</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--gold);">
+            <code>.remove_slug &lt;slug&gt;</code>
+            <span>Archive and purge a tournament (with confirmation prompt)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="separator"></div>
+
+    <!-- MINECRAFT COMMANDS -->
+    <section class="section" style="padding-top:0;">
+      <div class="marker-row">
+        <img src="cherufacepinkmote.png" alt="" class="marker-sm" />
+        <h2 class="section-title" style="margin-bottom:0; flex:1;">🎮 Minecraft Server</h2>
+      </div>
+      <div class="cmd-group">
+        <div class="cmd-list">
+          <div class="cmd-row" style="--row-color: var(--soft-green);">
+            <code>.startserver</code>
+            <span>Wake up the Minecraft server (Trusted role required)</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--soft-green);">
+            <code>.serveruptime</code>
+            <span>How long the server has been online this session</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--soft-green);">
+            <code>.sessionlength</code>
+            <span>Current session length in minutes</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--soft-green);">
+            <code>.projectedburn</code>
+            <span>Estimate runtime remaining based on credit burn rate</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--gold);">
+            <code>.restartserver <span class="badge badge-owner">owner</span></code>
+            <span>Restart the Exaroton server remotely</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--soft-green);">
+            <code>.link &lt;mc_username&gt;</code>
+            <span>Link your Discord to your Minecraft account</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--soft-green);">
+            <code>.playtime [@user]</code>
+            <span>Check playtime for yourself or someone else</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--soft-green);">
+            <code>.rewards</code>
+            <span>View available playtime rewards</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--soft-green);">
+            <code>.claim &lt;reward_id&gt;</code>
+            <span>Claim a playtime reward</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="separator"></div>
+
+    <!-- DAILY / LOOT -->
+    <section class="section" style="padding-top:0;">
+      <h2 class="section-title">🎁 Daily Rewards & Loot</h2>
+      <div class="cmd-group">
+        <div class="cmd-list">
+          <div class="cmd-row" style="--row-color: var(--rose);">
+            <code>.daily</code>
+            <span>Claim daily reward — requires 30+ words in a qualifying channel</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--rose);">
+            <code>.balance [@user]</code>
+            <span>Check coin balance and current streak</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--rose);">
+            <code>.dailystats</code>
+            <span>Detailed daily reward stats and history</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--rose);">
+            <code>.streaks</code>
+            <span>Leaderboard of longest daily streaks</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--soft-green);">
+            <code>.claim</code>
+            <span>Claim an active loot drop (be fast!)</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--soft-green);">
+            <code>.lootstats [@user]</code>
+            <span>View loot collection statistics</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--soft-green);">
+            <code>.lootboard</code>
+            <span>Top loot collectors leaderboard</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="separator"></div>
+
+    <!-- UTILITY -->
+    <section class="section" style="padding-top:0;">
+      <h2 class="section-title">🔧 Core & Utility</h2>
+      <div class="cmd-group">
+        <div class="cmd-list">
+          <div class="cmd-row" style="--row-color: var(--sky);">
+            <code>.how</code>
+            <span>Full paginated command guide with navigation buttons</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--sky);">
+            <code>.uptime</code>
+            <span>How long Cheru has been awake this session</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--sky);">
+            <code>.version</code>
+            <span>Current git commit / build version</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--sky);">
+            <code>.pingoffline</code>
+            <span>Ping the squad only if the Minecraft server appears offline</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--sky);">
+            <code>.mark &lt;x&gt; &lt;y&gt; &lt;z&gt; &lt;desc&gt;</code>
+            <span>Save a Minecraft coordinate pin with description</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--sky);">
+            <code>.pins</code>
+            <span>View your 5 most recent coordinate pins</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--sky);">
+            <code>.pinsexport</code>
+            <span>Export all your pins to a CSV file</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--sky);">
+            <code>.serverstats</code>
+            <span>Comprehensive server statistics overview</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--sky);">
+            <code>.starboard</code>
+            <span>Starboard system info and top starred users</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--gold);">
+            <code>.shutdown / .restart <span class="badge badge-owner">owner</span></code>
+            <span>Shut down or fully restart the bot process</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--gold);">
+            <code>.softreload <span class="badge badge-owner">owner</span></code>
+            <span>Hot-reload all cogs without disconnecting</span>
+          </div>
+          <div class="cmd-row" style="--row-color: var(--gold);">
+            <code>.purgebot [limit] [keyword] <span class="badge badge-owner">owner</span></code>
+            <span>Clean bot messages and command triggers from the channel</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>Made with <span class="rose">♥</span> for the secret garden &nbsp;·&nbsp; Cheru Bot</p>
+      <p style="margin-top:6px; opacity:0.5;">Place <code style="font-size:0.75rem;">green.png</code> and <code style="font-size:0.75rem;">cherufacepinkmote.png</code> in the same folder as this file.</p>
+    </footer>
+
+  </div><!-- .page -->
+
+  <script>
+    // Generate floating petals
+    const colors = ['#DC3D7D','#f9a8d4','#C5DEB8','#65EDF5'];
+    const container = document.getElementById('petals');
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'petal';
+      p.style.cssText = `
+        left: ${Math.random()*100}%;
+        background: ${colors[Math.floor(Math.random()*colors.length)]};
+        width: ${5 + Math.random()*7}px;
+        height: ${5 + Math.random()*7}px;
+        animation-duration: ${8 + Math.random()*14}s;
+        animation-delay: ${-Math.random()*20}s;
+      `;
+      container.appendChild(p);
+    }
+  </script>
+</body>
+</html>
