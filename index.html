@@ -99,256 +99,233 @@
     nav .nav-logo img {
       width: 36px;
       height: 36px;
-      border-radius: 50%;
-      border: 2px solid var(--rose);
-      box-shadow: 0 0 12px rgba(220,61,125,0.4);
+      border-radius: 8px;
+      object-fit: cover;
     }
     nav .nav-links {
       display: flex;
-      gap: 28px;
+      gap: 24px;
+      align-items: center;
     }
-    nav a.nav-link {
-      color: var(--soft-green);
+    nav .nav-links a {
+      color: rgba(255,255,255,0.7);
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       transition: color 0.2s;
-      letter-spacing: 0.02em;
+      position: relative;
     }
-    nav a.nav-link:hover { color: var(--rose); }
-    nav a.nav-link.active { color: var(--rose); font-weight: 500; }
+    nav .nav-links a:hover {
+      color: var(--soft-green);
+    }
+    nav .nav-links a.active {
+      color: #fff;
+      font-weight: 500;
+    }
+    nav .nav-links a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--soft-green);
+      border-radius: 2px;
+    }
 
     /* ── LAYOUT ── */
     .page { position: relative; z-index: 3; }
 
     /* ── HERO ── */
-    header {
-      min-height: 100vh;
+    .hero {
+      padding: 120px 24px 60px;
+      text-align: center;
+      position: relative;
+      min-height: 70vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      text-align: center;
-      padding: 120px 20px 40px;
-      position: relative;
-    }
-
-    .cheru-marker {
-      width: 110px; height: 110px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--rose);
-      box-shadow: 0 0 30px rgba(220,61,125,0.55), 0 0 60px rgba(220,61,125,0.2);
-      animation: float 4s ease-in-out infinite;
-      margin-bottom: 28px;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-12px); }
-    }
-
-    h1 {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: clamp(2.4rem, 6vw, 4.2rem);
-      font-weight: 700;
-      color: #fff;
-      text-shadow: 0 0 40px rgba(220,61,125,0.6), 0 2px 8px rgba(0,0,0,0.8);
-      letter-spacing: 0.04em;
-      line-height: 1.15;
-    }
-    h1 span { color: var(--rose); }
-
-    .tagline {
-      margin-top: 16px;
-      font-size: 1.1rem;
-      font-style: italic;
-      color: var(--soft-green);
-      opacity: 0.9;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.7);
-    }
-
-    .hero-divider {
-      margin: 36px auto 0;
-      width: 120px; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--rose), transparent);
-    }
-
-    /* ── NAV DOTS ── */
-    .scroll-hint {
-      margin-top: 40px;
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--soft-green);
-      opacity: 0.6;
-      animation: pulse 2.5s ease-in-out infinite;
-    }
-    @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:.9} }
-
-    /* ── SECTIONS ── */
-    .section {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 70px 24px;
-    }
-
-    .section-title {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: clamp(1.2rem, 3vw, 1.7rem);
-      color: var(--soft-green);
-      margin-bottom: 32px;
-      display: flex;
       align-items: center;
-      gap: 14px;
     }
-    .section-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(197,222,184,0.4), transparent);
+    .hero-avatar {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 4px solid var(--soft-green);
+      box-shadow: 0 0 40px rgba(197,222,184,0.4), 0 0 80px rgba(197,222,184,0.2);
+      margin: 0 auto 30px;
+      animation: gentlePulse 4s ease-in-out infinite;
+    }
+    @keyframes gentlePulse {
+      0%, 100% { box-shadow: 0 0 40px rgba(197,222,184,0.4), 0 0 80px rgba(197,222,184,0.2); }
+      50%      { box-shadow: 0 0 50px rgba(197,222,184,0.5), 0 0 100px rgba(197,222,184,0.25); }
+    }
+    .hero h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff 0%, var(--soft-green) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: clamp(1.1rem, 3vw, 1.3rem);
+      max-width: 600px;
+      margin: 0 auto 36px;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.6;
+    }
+    .cta-button {
+      display: inline-block;
+      padding: 14px 32px;
+      background: var(--soft-green);
+      color: var(--dark);
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(197,222,184,0.3);
+    }
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(197,222,184,0.4);
     }
 
-    /* ── CARDS ── */
-    .card-grid {
+    /* ── QUICK NAV ── */
+    .quick-nav {
+      max-width: 1100px;
+      margin: 0 auto 60px;
+      padding: 0 24px;
+    }
+    .quick-nav-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
     }
-
-    .card {
+    .quick-nav-card {
       background: var(--card-bg);
       border: 1px solid rgba(197,222,184,0.15);
-      border-radius: 14px;
-      padding: 24px 22px;
-      backdrop-filter: blur(10px);
-      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
-      position: relative;
-      overflow: hidden;
-    }
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--card-accent, var(--soft-green));
-      border-radius: 14px 14px 0 0;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(197,222,184,0.35);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-    }
-
-    .card-icon { font-size: 1.6rem; margin-bottom: 10px; }
-    .card h3 {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 0.9rem;
+      border-radius: 12px;
+      padding: 20px;
+      text-decoration: none;
       color: #fff;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .quick-nav-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(197,222,184,0.4);
+    }
+    .quick-nav-card h3 {
+      font-size: 1.1rem;
       margin-bottom: 8px;
+      color: var(--soft-green);
     }
-    .card p {
-      font-size: 0.88rem;
-      line-height: 1.65;
-      color: rgba(232,245,226,0.75);
-    }
-
-    /* ── COMMAND TABLE ── */
-    .cmd-group { margin-bottom: 36px; }
-    .cmd-group-title {
-      font-size: 0.75rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--rose);
-      margin-bottom: 12px;
-      padding-left: 4px;
-    }
-
-    .cmd-list { display: flex; flex-direction: column; gap: 6px; }
-    .cmd-row {
-      display: grid;
-      grid-template-columns: minmax(200px, auto) 1fr;
-      gap: 16px;
-      align-items: baseline;
-      padding: 10px 14px;
-      background: rgba(0,0,0,0.35);
-      border-radius: 8px;
-      border-left: 3px solid transparent;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .cmd-row:hover { border-left-color: var(--row-color, var(--rose)); background: rgba(0,0,0,0.5); }
-    .cmd-row code {
-      font-family: 'Courier New', monospace;
-      font-size: 0.82rem;
-      color: var(--sky);
-      white-space: nowrap;
-    }
-    .cmd-row span {
-      font-size: 0.84rem;
-      color: rgba(232,245,226,0.7);
+    .quick-nav-card p {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
       line-height: 1.4;
     }
 
-    /* ── BADGE PILLS ── */
-    .badge {
-      display: inline-block;
-      font-size: 0.68rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 2px 8px;
-      border-radius: 99px;
-      margin-left: 6px;
-      vertical-align: middle;
-      font-family: 'Courier New', monospace;
+    /* ── COMMANDS SECTION ── */
+    .section {
+      max-width: 1100px;
+      margin: 0 auto 80px;
+      padding: 0 24px;
     }
-    .badge-admin { background: rgba(88,101,242,0.25); color: var(--indigo); border: 1px solid rgba(88,101,242,0.5); }
-    .badge-owner { background: rgba(230,181,102,0.2); color: var(--gold);   border: 1px solid rgba(230,181,102,0.45); }
-
-    /* ── MARKER ACCENT ── */
-    .marker-row {
-      display: flex;
+    .section-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      text-align: center;
+      margin-bottom: 40px;
+      color: var(--soft-green);
+    }
+    .commands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .command-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(197,222,184,0.15);
+      border-radius: 12px;
+      padding: 24px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .command-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(197,222,184,0.3);
+    }
+    .command-card h4 {
+      display: inline-flex;
       align-items: center;
-      gap: 14px;
-      margin: 50px 0 20px;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 1.15rem;
+      color: #fff;
     }
-    .marker-sm {
-      width: 38px; height: 38px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--rose);
-      box-shadow: 0 0 14px rgba(220,61,125,0.4);
-      flex-shrink: 0;
+    .command-card code {
+      background: rgba(197,222,184,0.1);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.92rem;
+      color: var(--soft-green);
+      border: 1px solid rgba(197,222,184,0.2);
+    }
+    .command-card p {
+      color: rgba(255,255,255,0.75);
+      line-height: 1.6;
+      font-size: 0.95rem;
     }
 
     /* ── FOOTER ── */
     footer {
+      background: rgba(10, 18, 10, 0.9);
+      border-top: 1px solid rgba(197,222,184,0.15);
+      padding: 40px 24px;
       text-align: center;
-      padding: 48px 20px 64px;
-      font-size: 0.8rem;
-      color: rgba(197,222,184,0.4);
-      letter-spacing: 0.06em;
       position: relative;
       z-index: 3;
     }
-    footer .rose { color: var(--rose); }
-
-    /* ── SEPARATOR ── */
-    .separator {
-      width: 60px; height: 2px;
-      margin: 0 auto 60px;
-      background: linear-gradient(90deg, transparent, rgba(197,222,184,0.3), transparent);
+    footer p {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+    footer .footer-links {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    footer .footer-links a {
+      color: var(--soft-green);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: opacity 0.2s;
+    }
+    footer .footer-links a:hover {
+      opacity: 0.7;
     }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 580px) {
-      .cmd-row { grid-template-columns: 1fr; gap: 4px; }
-      .cmd-row span { padding-left: 4px; }
-      nav .nav-links { gap: 16px; }
-      nav .nav-logo span { display: none; }
+    @media (max-width: 640px) {
+      nav .nav-inner {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .quick-nav-grid {
+        grid-template-columns: 1fr;
+      }
+      .commands-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-
-  <!-- Background layers -->
+  <!-- Background Layers -->
   <div class="bg-layer"></div>
   <div class="bg-vignette"></div>
   <div class="petals" id="petals"></div>
@@ -357,394 +334,254 @@
   <nav>
     <div class="nav-inner">
       <a href="index.html" class="nav-logo">
-        <img src="cherufacepinkmote.png" alt="Cheru" />
+        <img src="cherufacepinkmote.png" alt="Cheru">
         <span>Cheru</span>
       </a>
       <div class="nav-links">
-        <a href="index.html" class="nav-link active">Commands</a>
-        <a href="economy.html" class="nav-link">Economy</a>
+        <a href="index.html" class="active">Commands</a>
+        <a href="economy.html">Economy</a>
       </div>
     </div>
   </nav>
 
+  <!-- Main Content -->
   <div class="page">
+    <!-- Hero -->
+    <section class="hero">
+      <img src="cherufacepinkmote.png" alt="Cheru Avatar" class="hero-avatar">
+      <h1>Cheru</h1>
+      <p>Your garden spirit companion. Manage servers, host tournaments, earn rewards, and cultivate your digital garden.</p>
+      <a href="#commands" class="cta-button">Explore Commands</a>
+    </section>
 
-    <!-- HERO -->
-    <header>
-      <img src="cherufacepinkmote.png" alt="Cheru" class="cheru-marker" />
-      <h1>Cheru<br/><span>The Garden Spirit</span></h1>
-      <p class="tagline">Tending to the server's secret garden</p>
-      <div class="hero-divider"></div>
-      <p class="scroll-hint">↓ explore the garden ↓</p>
-    </header>
-
-    <!-- WHAT IS CHERU -->
-    <section class="section">
-      <h2 class="section-title">🌱 What is Cheru?</h2>
-      <p style="font-size:1rem; line-height:1.9; color:rgba(232,245,226,0.8); max-width:680px;">
-        Cheru is a custom Discord bot built for a tight-knit Minecraft & gaming community. She manages
-        tournaments, tracks bloom words, runs loot drops, monitors server uptime, and keeps the garden alive.
-        Every command is designed to feel like tending to something that grows.
-      </p>
-
-      <div class="card-grid" style="margin-top:36px;">
-        <div class="card" style="--card-accent: var(--soft-green);">
-          <div class="card-icon">🌸</div>
-          <h3>Bloom Words</h3>
-          <p>Passive phrase tracking — say the right words and your garden grows. Collect, gift, and climb the leaderboard.</p>
-        </div>
-        <div class="card" style="--card-accent: var(--rose);">
-          <div class="card-icon">🏆</div>
+    <!-- Quick Navigation -->
+    <section class="quick-nav">
+      <div class="quick-nav-grid">
+        <a href="#daily-economy" class="quick-nav-card">
+          <h3>Daily Rewards & Economy</h3>
+          <p>Earn petals & essence, claim dailies, and manage your garden wallet</p>
+        </a>
+        <a href="#garden-features" class="quick-nav-card">
+          <h3>Garden Features</h3>
+          <p>Shop, tasks, forge radiant, and gift currency to friends</p>
+        </a>
+        <a href="#server-management" class="quick-nav-card">
+          <h3>Server Tools</h3>
+          <p>Moderation, verification, stats, and server management</p>
+        </a>
+        <a href="#tournaments" class="quick-nav-card">
           <h3>Tournaments</h3>
-          <p>Full Challonge integration. Create brackets, register players, report results, and track ELO across events.</p>
-        </div>
-        <div class="card" style="--card-accent: var(--sky);">
-          <div class="card-icon">🎮</div>
-          <h3>Minecraft Server</h3>
-          <p>Exaroton API integration — check uptime, session length, credit burn rate, and restart the server remotely.</p>
-        </div>
-        <div class="card" style="--card-accent: var(--gold);">
-          <div class="card-icon">🎁</div>
-          <h3>Daily Rewards & Loot</h3>
-          <p>Daily coin rewards with streaks, random loot drops in chat, and playtime-based Minecraft reward claims.</p>
-        </div>
-        <div class="card" style="--card-accent: var(--indigo);">
-          <div class="card-icon">📍</div>
-          <h3>PinPoint</h3>
-          <p>Save and search Minecraft coordinates. Export your whole pin collection as CSV anytime.</p>
-        </div>
-        <div class="card" style="--card-accent: var(--pink);">
-          <div class="card-icon">⭐</div>
-          <h3>Starboard & Stats</h3>
-          <p>Automatic starboard, server growth tracking, activity stats, and detailed per-user star counts.</p>
-        </div>
+          <p>Host and manage competitive tournaments with ELO tracking</p>
+        </a>
       </div>
     </section>
 
-    <div class="separator"></div>
+    <!-- Commands Sections -->
+    <div id="commands">
 
-    <!-- BLOOM COMMANDS -->
-    <section class="section" style="padding-top:0;">
-      <div class="marker-row">
-        <img src="cherufacepinkmote.png" alt="" class="marker-sm" />
-        <h2 class="section-title" style="margin-bottom:0; flex:1;">🌸 Bloom Words</h2>
-      </div>
-      <div class="cmd-group">
-        <p class="cmd-group-title">Player Commands</p>
-        <div class="cmd-list">
-          <div class="cmd-row" style="--row-color: var(--rose);">
-            <code>.bloom &lt;word&gt;</code>
-            <span>Claim a bloom word for yourself</span>
+      <!-- Daily Rewards & Economy -->
+      <section class="section" id="daily-economy">
+        <h2 class="section-title">🌱 Daily Rewards & Economy</h2>
+        <div class="commands-grid">
+          <div class="command-card">
+            <h4><code>.daily</code></h4>
+            <p>Claim your daily petals and essence. Requires 30+ words in SFW or NSFW channels today. VIP members get 2x rewards! Streak bonuses apply.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--rose);">
-            <code>.bloomgarden [@user]</code>
-            <span>View someone's bloom collection (or your own)</span>
+          <div class="command-card">
+            <h4><code>.balance</code> <code>.bal</code></h4>
+            <p>Check your garden wallet. Shows petals, essence, radiant, current streak, tier, and today's activity progress.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--rose);">
-            <code>.bloomsearch &lt;word&gt;</code>
-            <span>Search for a specific bloom phrase</span>
+          <div class="command-card">
+            <h4><code>.dailystats</code> <code>.dstats</code></h4>
+            <p>View detailed daily reward statistics including total claims, total earned, tier info, and activity breakdown.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--rose);">
-            <code>.bloomleader</code>
-            <span>Top gardeners leaderboard — overall, by phrase, or by tier</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--rose);">
-            <code>.bloomstats</code>
-            <span>Your personal bloom statistics</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--rose);">
-            <code>.bloomgift &lt;word&gt; &lt;@user&gt;</code>
-            <span>Gift one of your blooms to another member</span>
+          <div class="command-card">
+            <h4><code>.streaks</code> <code>.dailyleaderboard</code></h4>
+            <p>View the longest daily streaks leaderboard. See who has the most consecutive daily claims!</p>
           </div>
         </div>
-      </div>
-      <div class="cmd-group">
-        <p class="cmd-group-title">Admin Commands <span class="badge badge-admin">admin</span></p>
-        <div class="cmd-list">
-          <div class="cmd-row" style="--row-color: var(--indigo);">
-            <code>.bloompurge &lt;word&gt;</code>
-            <span>Remove a bloom phrase entirely</span>
+      </section>
+
+      <!-- Garden Features -->
+      <section class="section" id="garden-features">
+        <h2 class="section-title">🌸 Garden Features</h2>
+        <div class="commands-grid">
+          <div class="command-card">
+            <h4><code>.gforge</code></h4>
+            <p>Forge a radiant from 300 petals + 100 essence. Radiants are the ultra-rare prestige currency!</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--indigo);">
-            <code>.bloomforceadd &lt;word&gt; &lt;tier&gt; &lt;@user&gt;</code>
-            <span>Forcefully give a bloom to a user</span>
+          <div class="command-card">
+            <h4><code>.gshop</code> <code>.gshop [category]</code></h4>
+            <p>Browse the garden shop. Filter by category to see specific items. Shows prices, stock, and descriptions.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--indigo);">
-            <code>.bloomcount</code>
-            <span>Total bloom phrase statistics (10 min cooldown)</span>
+          <div class="command-card">
+            <h4><code>.gbuy &lt;item_id&gt;</code></h4>
+            <p>Purchase an item from the shop. Interactive confirmation with balance check and order creation.</p>
+          </div>
+          <div class="command-card">
+            <h4><code>.gtasks</code></h4>
+            <p>View available tasks. Complete tasks to earn petals and essence. Tracks completion status.</p>
+          </div>
+          <div class="command-card">
+            <h4><code>.gcomplete &lt;task_id&gt;</code></h4>
+            <p>Complete a task and claim your rewards. Some tasks are repeatable, others are one-time only.</p>
+          </div>
+          <div class="command-card">
+            <h4><code>.ggift @user &lt;amount&gt; &lt;currency&gt;</code></h4>
+            <p>Gift petals or essence to another user. Radiants cannot be gifted! Spread the love.</p>
+          </div>
+          <div class="command-card">
+            <h4><code>.gleaderboard</code> <code>.glb</code> <code>.gtop</code></h4>
+            <p>View top earners in the garden. Shows total earned, tier, and current balances.</p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <div class="separator"></div>
-
-    <!-- TOURNAMENT COMMANDS -->
-    <section class="section" style="padding-top:0;">
-      <h2 class="section-title">🏆 Tournaments</h2>
-      <div class="cmd-group">
-        <p class="cmd-group-title">Player Commands</p>
-        <div class="cmd-list">
-          <div class="cmd-row" style="--row-color: var(--indigo);">
-            <code>.register &lt;slug&gt;</code>
-            <span>Join a tournament — auto-matches your Discord name or creates a new participant</span>
+      <!-- Server Management -->
+      <section class="section" id="server-management">
+        <h2 class="section-title">🛡️ Server Management</h2>
+        <div class="commands-grid">
+          <div class="command-card">
+            <h4><code>.verify</code></h4>
+            <p>Start the verification process to gain access to the server. Must be used in the verification channel.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--indigo);">
-            <code>.report &lt;slug&gt; &lt;match_id&gt; &lt;score&gt;</code>
-            <span>Submit your match result (e.g. 3-1). Queued for admin approval.</span>
+          <div class="command-card">
+            <h4><code>.serverstats</code></h4>
+            <p>View comprehensive server statistics including member counts, channel stats, and server info.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--indigo);">
-            <code>.elo [@user]</code>
-            <span>Check your or someone else's ELO rating</span>
+          <div class="command-card">
+            <h4><code>.welcome @user</code></h4>
+            <p>Manually trigger a welcome message for a user. Useful for re-welcoming members.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--indigo);">
-            <code>.standings</code>
-            <span>Global ELO leaderboard — top 20 players</span>
+          <div class="command-card">
+            <h4><code>.prefix &lt;new_prefix&gt;</code></h4>
+            <p>Change the bot's command prefix. Default is "." - customize it to your preference!</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--indigo);">
-            <code>.match_history &lt;slug&gt; [@user]</code>
-            <span>Last 10 match results for you or another player</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--indigo);">
-            <code>.match_list &lt;slug&gt;</code>
-            <span>Current open matches with player mentions</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--indigo);">
-            <code>.tinfo &lt;slug&gt;</code>
-            <span>Tournament overview — type, state, participants, bracket link</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--indigo);">
-            <code>.bracket &lt;slug&gt;</code>
-            <span>Direct Challonge bracket link</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--indigo);">
-            <code>.status &lt;slug&gt;</code>
-            <span>Tournament progress — match completion percentage</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--indigo);">
-            <code>.slugs</code>
-            <span>List all currently tracked tournaments</span>
+          <div class="command-card">
+            <h4><code>.ping</code></h4>
+            <p>Check the bot's latency and response time. Simple health check command.</p>
           </div>
         </div>
-      </div>
-      <div class="cmd-group">
-        <p class="cmd-group-title">Organizer / Admin Commands <span class="badge badge-admin">admin</span></p>
-        <div class="cmd-list">
-          <div class="cmd-row" style="--row-color: var(--gold);">
-            <code>.ct &lt;slug&gt; &lt;type&gt; &lt;name&gt; [@role]</code>
-            <span>Create a tournament. Types: single, double, round. Optional role preloads participants.</span>
+      </section>
+
+      <!-- Tournaments -->
+      <section class="section" id="tournaments">
+        <h2 class="section-title">🏆 Tournaments</h2>
+        <div class="commands-grid">
+          <div class="command-card">
+            <h4><code>.tournament create</code></h4>
+            <p>Create a new tournament with interactive setup. Configure name, type, size, and more.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--gold);">
-            <code>.seed &lt;slug&gt;</code>
-            <span>Start tournament / process check-ins</span>
+          <div class="command-card">
+            <h4><code>.tournament start</code></h4>
+            <p>Start a created tournament and begin the bracket. Randomizes seeding if not set.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--gold);">
-            <code>.areport &lt;slug&gt; &lt;match_id&gt; @winner &lt;score&gt;</code>
-            <span>Force-submit any match result as admin</span>
+          <div class="command-card">
+            <h4><code>.tournament match &lt;match_id&gt; &lt;winner&gt;</code></h4>
+            <p>Report a match result. Updates bracket and advances winner to next round.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--gold);">
-            <code>.confirm_report &lt;slug&gt; &lt;match_id&gt;</code>
-            <span>Approve a pending report — pushes to Challonge and updates ELO</span>
+          <div class="command-card">
+            <h4><code>.tournament bracket</code></h4>
+            <p>View the current tournament bracket with all matches and results.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--gold);">
-            <code>.deny_report &lt;slug&gt; &lt;match_id&gt;</code>
-            <span>Reject a pending report and notify the submitter</span>
+          <div class="command-card">
+            <h4><code>.tournament leaderboard</code></h4>
+            <p>View ELO rankings for all participants. Shows rating, rank, and win/loss records.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--gold);">
-            <code>.admin_add &lt;slug&gt; @user</code>
-            <span>Add and auto-bind a user to the tournament</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--gold);">
-            <code>.admin_bind &lt;slug&gt; @user &lt;pid&gt;</code>
-            <span>Manually bind a user to a specific Challonge participant ID</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--gold);">
-            <code>.set_elo @user &lt;score&gt;</code>
-            <span>Override someone's ELO rating</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--gold);">
-            <code>.drop &lt;slug&gt; @user</code>
-            <span>Remove a player from a tournament</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--gold);">
-            <code>.remove_slug &lt;slug&gt;</code>
-            <span>Archive and purge a tournament (with confirmation prompt)</span>
+          <div class="command-card">
+            <h4><code>.tournament info</code></h4>
+            <p>Get detailed information about the current tournament including status and participant count.</p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <div class="separator"></div>
-
-    <!-- MINECRAFT COMMANDS -->
-    <section class="section" style="padding-top:0;">
-      <div class="marker-row">
-        <img src="cherufacepinkmote.png" alt="" class="marker-sm" />
-        <h2 class="section-title" style="margin-bottom:0; flex:1;">🎮 Minecraft Server</h2>
-      </div>
-      <div class="cmd-group">
-        <div class="cmd-list">
-          <div class="cmd-row" style="--row-color: var(--soft-green);">
-            <code>.startserver</code>
-            <span>Wake up the Minecraft server (Trusted role required)</span>
+      <!-- Utility & Fun -->
+      <section class="section">
+        <h2 class="section-title">✨ Utility & Fun</h2>
+        <div class="commands-grid">
+          <div class="command-card">
+            <h4><code>.help</code></h4>
+            <p>Display the interactive help menu with categorized commands and detailed descriptions.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--soft-green);">
-            <code>.serveruptime</code>
-            <span>How long the server has been online this session</span>
+          <div class="command-card">
+            <h4><code>.listcommands</code></h4>
+            <p>Browse all available commands in an interactive paginated view. Navigate with buttons.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--soft-green);">
-            <code>.sessionlength</code>
-            <span>Current session length in minutes</span>
+          <div class="command-card">
+            <h4><code>.starboard</code></h4>
+            <p>View the server's starboard - the most starred messages. Hall of fame!</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--soft-green);">
-            <code>.projectedburn</code>
-            <span>Estimate runtime remaining based on credit burn rate</span>
+          <div class="command-card">
+            <h4><code>.lootdrop claim</code></h4>
+            <p>Claim loot when a drop appears! First to claim wins. Drops appear randomly.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--gold);">
-            <code>.restartserver <span class="badge badge-owner">owner</span></code>
-            <span>Restart the Exaroton server remotely</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--soft-green);">
-            <code>.link &lt;mc_username&gt;</code>
-            <span>Link your Discord to your Minecraft account</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--soft-green);">
-            <code>.playtime [@user]</code>
-            <span>Check playtime for yourself or someone else</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--soft-green);">
-            <code>.rewards</code>
-            <span>View available playtime rewards</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--soft-green);">
-            <code>.claim &lt;reward_id&gt;</code>
-            <span>Claim a playtime reward</span>
+          <div class="command-card">
+            <h4><code>.u3t</code></h4>
+            <p>Play Ultimate Tic-Tac-Toe against another player or the bot. Strategic 3x3 grid madness!</p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <div class="separator"></div>
-
-    <!-- DAILY / LOOT -->
-    <section class="section" style="padding-top:0;">
-      <h2 class="section-title">🎁 Daily Rewards & Loot</h2>
-      <div class="cmd-group">
-        <div class="cmd-list">
-          <div class="cmd-row" style="--row-color: var(--rose);">
-            <code>.daily</code>
-            <span>Claim daily reward — requires 30+ words in a qualifying channel</span>
+      <!-- Admin Commands -->
+      <section class="section">
+        <h2 class="section-title">⚙️ Admin Commands</h2>
+        <div class="commands-grid">
+          <div class="command-card">
+            <h4><code>.gadd @user &lt;amount&gt; &lt;currency&gt;</code></h4>
+            <p>Add garden currency to a user's balance. Admin only. Supports petals, essence, and radiant.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--rose);">
-            <code>.balance [@user]</code>
-            <span>Check coin balance and current streak</span>
+          <div class="command-card">
+            <h4><code>.gset @user &lt;amount&gt; &lt;currency&gt;</code></h4>
+            <p>Set a user's currency balance to a specific amount. Admin only.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--rose);">
-            <code>.dailystats</code>
-            <span>Detailed daily reward stats and history</span>
+          <div class="command-card">
+            <h4><code>.gitemcreate &lt;price&gt; &lt;currency&gt; &lt;stock&gt; &lt;name&gt;</code></h4>
+            <p>Create a new shop item. Interactive description prompt. Admin only.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--rose);">
-            <code>.streaks</code>
-            <span>Leaderboard of longest daily streaks</span>
+          <div class="command-card">
+            <h4><code>.gitemdel &lt;item_id&gt;</code></h4>
+            <p>Deactivate/delete a shop item. Removes it from the shop. Admin only.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--soft-green);">
-            <code>.claim</code>
-            <span>Claim an active loot drop (be fast!)</span>
+          <div class="command-card">
+            <h4><code>.gforcedrop &lt;amount&gt; &lt;currency&gt;</code></h4>
+            <p>Manually spawn a currency drop. Creates an instant claimable drop. Admin only.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--soft-green);">
-            <code>.lootstats [@user]</code>
-            <span>View loot collection statistics</span>
+          <div class="command-card">
+            <h4><code>.doas @user &lt;command&gt;</code></h4>
+            <p>Execute a command as another user. Powerful testing tool. Restricted to authorized developers.</p>
           </div>
-          <div class="cmd-row" style="--row-color: var(--soft-green);">
-            <code>.lootboard</code>
-            <span>Top loot collectors leaderboard</span>
+          <div class="command-card">
+            <h4><code>.reload &lt;cog&gt;</code></h4>
+            <p>Hot-reload a bot cog/extension without restarting. Developer only.</p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <div class="separator"></div>
+    </div>
+  </div>
 
-    <!-- UTILITY -->
-    <section class="section" style="padding-top:0;">
-      <h2 class="section-title">🔧 Core & Utility</h2>
-      <div class="cmd-group">
-        <div class="cmd-list">
-          <div class="cmd-row" style="--row-color: var(--sky);">
-            <code>.how</code>
-            <span>Full paginated command guide with navigation buttons</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--sky);">
-            <code>.uptime</code>
-            <span>How long Cheru has been awake this session</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--sky);">
-            <code>.version</code>
-            <span>Current git commit / build version</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--sky);">
-            <code>.pingoffline</code>
-            <span>Ping the squad only if the Minecraft server appears offline</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--sky);">
-            <code>.mark &lt;x&gt; &lt;y&gt; &lt;z&gt; &lt;desc&gt;</code>
-            <span>Save a Minecraft coordinate pin with description</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--sky);">
-            <code>.pins</code>
-            <span>View your 5 most recent coordinate pins</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--sky);">
-            <code>.pinsexport</code>
-            <span>Export all your pins to a CSV file</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--sky);">
-            <code>.serverstats</code>
-            <span>Comprehensive server statistics overview</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--sky);">
-            <code>.starboard</code>
-            <span>Starboard system info and top starred users</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--gold);">
-            <code>.shutdown / .restart <span class="badge badge-owner">owner</span></code>
-            <span>Shut down or fully restart the bot process</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--gold);">
-            <code>.softreload <span class="badge badge-owner">owner</span></code>
-            <span>Hot-reload all cogs without disconnecting</span>
-          </div>
-          <div class="cmd-row" style="--row-color: var(--gold);">
-            <code>.purgebot [limit] [keyword] <span class="badge badge-owner">owner</span></code>
-            <span>Clean bot messages and command triggers from the channel</span>
-          </div>
-        </div>
-      </div>
-    </section>
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 Cheru · The Garden Spirit Bot</p>
+    <div class="footer-links">
+      <a href="index.html">Commands</a>
+      <a href="economy.html">View Economy →</a>
+    </div>
+  </footer>
 
-    <!-- FOOTER -->
-    <footer>
-      <p>Made with <span class="rose">♥</span> for the secret garden &nbsp;·&nbsp; Cheru Bot &nbsp;·&nbsp; <a href="economy.html" style="color: var(--rose); text-decoration: none;">View Economy →</a></p>
-    </footer>
-
-  </div><!-- .page -->
-
+  <!-- Floating Petals Script -->
   <script>
-    // Generate floating petals
-    const colors = ['#DC3D7D','#f9a8d4','#C5DEB8','#65EDF5'];
     const container = document.getElementById('petals');
-    for (let i = 0; i < 18; i++) {
-      const p = document.createElement('div');
-      p.className = 'petal';
-      p.style.cssText = `
-        left: ${Math.random()*100}%;
-        background: ${colors[Math.floor(Math.random()*colors.length)]};
-        width: ${5 + Math.random()*7}px;
-        height: ${5 + Math.random()*7}px;
-        animation-duration: ${8 + Math.random()*14}s;
-        animation-delay: ${-Math.random()*20}s;
-      `;
-      container.appendChild(p);
+    const colors = ['#f9a8d4', '#C5DEB8', '#E6B566', '#DC3D7D'];
+    
+    for (let i = 0; i < 20; i++) {
+      const petal = document.createElement('div');
+      petal.className = 'petal';
+      petal.style.left = Math.random() * 100 + '%';
+      petal.style.background = colors[Math.floor(Math.random() * colors.length)];
+      petal.style.animationDuration = (8 + Math.random() * 8) + 's';
+      petal.style.animationDelay = Math.random() * 10 + 's';
+      container.appendChild(petal);
     }
   </script>
 </body>
